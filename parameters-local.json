@@ -1,0 +1,5 @@
+{
+  "NRO_THREADS": "100",
+  "MAX_CONCURRENCY": "5000",
+  "NRO_EXECUTIONS": "5000"
+}
