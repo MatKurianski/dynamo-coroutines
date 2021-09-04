@@ -40,9 +40,9 @@ private val dynamoTable = dynamoEnhancedAsyncClient.table("teste", TableSchema.f
 class Main : RequestHandler<String, String> {
     override fun handleRequest(p0: String?, p1: Context?): String {
         val time = measureTimeMillis {
-            runBlocking(Dispatchers.Unconfined) {
+            runBlocking {
                 repeat(NRO_EXECUTIONS) {
-                    launch { getItem(it) }
+                    launch { getItemMock(it) }
                 }
             }
         }
@@ -58,11 +58,18 @@ fun main() {
 private suspend fun getItem(iteration: Int): Unit {
     val startTime = System.currentTimeMillis()
     dynamoTable.getItem(Key.builder()
-        .partitionValue("teste")
+        .partitionValue("test")
         .build())
     .await()
     val stopTime = System.currentTimeMillis()
     log("Executado em ${stopTime - startTime} ms", iteration)
+}
+
+private suspend fun getItemMock(iteration: Int): Unit {
+    val startTime = System.currentTimeMillis()
+    delay(Random.nextLong(5, 20))
+    val stopTime = System.currentTimeMillis()
+    log("[MOCK] Executado em ${stopTime - startTime} ms", iteration)
 }
 
 private fun log(message: String, iteration: Int = -1) {
